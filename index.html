@@ -1,0 +1,389 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMPLIFY: Actionless Motion Priors for Robot Learning from Videos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+
+    
+    <script src="scripts/video-controller.js" defer></script>
+    <script src="scripts/gallery-controller.js" defer></script>
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="title-box">
+            <h1>AMPLIFY: Actionless Motion Priors for Robot Learning from Videos</h1>
+        </div>
+    </header>
+
+    <!-- <div class="authors">
+        <div class="author">
+          <div class="name">Anonymous Authors</div>
+          <div class="affiliation">CoRL 2025</div>
+        </div>
+    </div>
+       -->
+    <div class="button-container" style="margin-top: 10px;">
+        <a href="amplify.pdf" class="button"><i class="fa-solid fa-file-pdf" style="margin-right:10px;"></i>Paper (PDF)</a>
+        <!-- <a href="#" class="button"><i class="ai ai-arxiv" style="margin-right:10px;"></i>arXiv</a> -->
+        <a href="#" class="button"><i class="fas fa-code" style="margin-right:10px;"></i>Code (Coming Soon)</a>
+    </div> 
+
+    <!-- Overview Figure -->
+    
+    <div class="overview">
+        <video class="custom-video"
+            data-autoplay
+            data-loop-delay="5000"
+            data-muted
+            width="100%">
+            <source src="assets/videos/fig1-web-720-60.mp4" type="video/mp4">
+        </video>
+        <p class="block-caption" style="text-align: left;"><strong>Overview of AMPLIFY.</strong> Our approach decomposes policy learning into forward and inverse dynamics, using latent keypoint motion as an intermediate representation. The forward model can be trained on <em>any</em> video data, while the inverse model can be trained on <em>any</em> interaction data. This modular design enables learning from diverse data sources and generalizing to tasks with zero action data.</p>
+    </div>
+
+    <!-- Main Video  TODO: add main video -->
+    
+    <!-- <div class="video-container">
+        <div class="video-placeholder">
+            <div class="placeholder-icon">▶</div>
+            <p>Video Overview (3 minutes)</p>
+        </div>
+    </div> -->
+
+
+    <!-- Introduction Section -->
+    <div class="text-box">
+        <!-- <h2>Introduction</h2> -->
+        <p>Action-labeled data for robotics is scarce and expensive, limiting the generalization of learned policies. In contrast, vast amounts of action-free video data are readily available, but translating these observations into effective policies remains a challenge. We introduce AMPLIFY, a novel framework that leverages large-scale video data by encoding visual dynamics into compact, discrete motion tokens derived from keypoint trajectories. Our modular approach separates visual motion prediction from action inference, decoupling the challenges of learning <strong>what</strong> motion defines a task from <strong>how</strong> robots can perform it.</p>
+
+        <h3>Key Contributions</h3>
+        <ul class="key-points">
+            <li>We present the first <em>latent</em> keypoint dynamics model and investigate crucial design choices.</li>
+            <li>We demonstrate state-of-the-art keypoint prediction accuracy on three large-scale video datasets.</li>
+            <li>We train a data-efficient and generalizable policy that can learn from action-free human data.</li>
+            <li>We apply latent motions to conditional video generation, outperforming previous baselines.</li>
+        </ul>
+
+        <h3>Why Actionless Motion Priors?</h3>
+        <p>Behavior Cloning (BC) approaches require prohibitively large amounts of action-labeled expert demonstrations. In contrast, AMPLIFY leverages abundant action-free video data by:</p>
+        <ul class="key-points">
+            <li>Learning a compact latent space for keypoint motion that efficiently captures action-relevant dynamics</li>
+            <li>Decoupling the challenges of learning <em>what</em> motion corresponds to a task from <em>how</em> to execute it</li>
+            <li>Enabling independent scaling of the forward and inverse dynamics models using heterogeneous data sources</li>
+        </ul>
+    </div>
+
+    <!-- Method Section -->
+    <div class="text-box">
+        <h2>Method</h2>
+        <div class="method">
+            <video class="custom-video"
+                data-controls
+                data-autoplay
+                data-loop
+                data-muted
+                width="100%">
+                <source src="assets/videos/fig2-web-720-60.mp4" type="video/mp4">
+            </video>
+            <div class="block-caption" style="text-align: left;">
+                <p><strong>AMPLIFY consists of three stages:</strong></p>
+                <ol style="margin-left: 1em;">
+                  <li><strong>Motion Tokenization:</strong> Keypoint tracks are compressed into a discrete latent space using Finite Scalar Quantization (FSQ). For each timestep and point, the decoder predicts motions in a local window.</li>
+                  <li><strong>Forward Dynamics:</strong> A transformer model predicts latent motion tokens for the next T timesteps based on the current observation and task description.</li>
+                  <li><strong>Inverse Dynamics:</strong> A model decodes predicted latent motions into a sequence of robot actions for execution.</li>
+                </ol>
+              </div>
+        </div>
+    </div>
+    
+    <!-- Results
+
+    <div class="text-box">
+        <h2>Results</h2>
+    
+        <h3>Superior Keypoint Prediction</h3> TODO: add comparison with ATM
+        <div class="figure-container">
+            <div class="figure-placeholder">
+                <div class="figure-placeholder-text">Fig: Keypoint prediction visualization</div>
+            </div>
+            <p class="figure-caption">AMPLIFY achieves 3.7× better MSE and 2.5× better pixel accuracy compared to previous approaches.</p>
+        </div>
+        
+        <h3>Zero-Shot Generalization: Learning Without Target Task Actions</h3> TODO: add rollouts
+        <div class="figure-container">
+            <div class="figure-placeholder">
+                <div class="figure-placeholder-text">Fig: Zero-shot generalization results visualization</div>
+            </div>
+            <p class="figure-caption">AMPLIFY is the first approach to report non-trivial success on LIBERO without using any action data from target tasks. Our method achieves substantial success rates where baseline methods completely fail.</p>
+        </div>
+        
+        <h3>Few-Shot Learning: Efficient Learning from Limited Action Data</h3>
+        <div class="figure-container">
+            <div class="figure-placeholder">
+                <div class="figure-placeholder-text">Fig: Few-shot learning performance across LIBERO tasks</div>
+            </div>
+            <p class="figure-caption">AMPLIFY consistently outperforms baselines when trained with limited action data, showing 1.2-2.2× improvement with only 2-10 demonstrations per task.</p>
+        </div>
+
+        <h3>Cross-Embodiment Transfer: Learning from Human Videos</h3> TODO: add matching human/robot video
+        <div class="figure-container">
+            <div class="figure-placeholder">
+                <div class="figure-placeholder-text">Fig: Cross-embodiment transfer performance on real-world tasks</div>
+            </div>
+            <p class="figure-caption">By leveraging human demonstration videos, AMPLIFY achieves 1.4× average improvement over baselines on real-world robotic tasks.</p>
+        </div>
+        
+    </div> -->
+
+    <!-- Results Section -->
+    <div class="text-box">
+        <h2>Results</h2>
+        
+        <h3>Track Prediction Results</h3>
+    <div class="gallery">
+        <div class="gallery-container" id="track-gallery">
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/bridge_track_pred_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/eggplant_human_0_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/eggplant_robot_0_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_10_tracks_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/bridge_track_pred_1.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/cup_human_0_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/cup_robot_0_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_90_tracks_2.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/bridge_track_pred_2.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/cube_human_0_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/cube_robot_1_cropped.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_10_tracks_2.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/bridge_track_pred_3.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_90_tracks_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/bridge_track_pred_4.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_90_tracks_1.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-navigation">
+            <button class="button gallery-button" id="track-prev">◀ Previous</button>
+            <button class="button gallery-button" id="track-next">Next ▶</button>
+        </div>
+        <div class="debug-info" id="track-debug"></div>
+    </div>
+    
+    <h3>Robot Policy Rollouts (4x Speed)</h3>
+    <div class="gallery">
+        <div class="gallery-container" id="rollout-gallery">
+            <!-- Cup 1 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_2.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Eggplant 2 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_7.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Cube 1 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_11.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <!-- Cup 2 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_3.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Eggplant 1 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_6.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Cube 2 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_12.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <!-- Cup 3 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_4.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Eggplant 3 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_10.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <!-- Cube 3 -->
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/rollout_gallery/video_14.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-navigation">
+            <button class="button gallery-button" id="rollout-prev">◀ Previous</button>
+            <button class="button gallery-button" id="rollout-next">Next ▶</button>
+        </div>
+        <div class="debug-info" id="rollout-debug"></div>
+    </div>
+
+    <h3>Generalization Results (Tasks Without Action Ground Truth)</h3>
+    <div class="gallery">
+        <div class="gallery-container" id="generalization-gallery">
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_10_generalization_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_object_generalization_0.mp4" autoplay muted loop playsinline></video><div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_10_generalization_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_spatial_generalization_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <video src="assets/videos/track_gallery/libero_goal_generalization_0.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-navigation">
+            <button class="button gallery-button" id="generalization-prev">◀ Previous</button>
+            <button class="button gallery-button" id="generalization-next">Next ▶</button>
+        </div>
+        <div class="debug-info" id="track-debug"></div>
+    </div>
+    
+    <h3>Video Prediction Results</h3>
+    <div class="gallery">
+        <div class="gallery-container" id="video-gallery">
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <img src="assets/videos/video_gallery/bridge_video_pred_1.gif" alt="Video Prediction">
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <img src="assets/videos/video_gallery/bridge_video_pred_2.gif" alt="Video Prediction">
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <img src="assets/videos/video_gallery/bridge_video_pred_3.gif" alt="Video Prediction">
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <img src="assets/videos/video_gallery/bridge_video_pred_4.gif" alt="Video Prediction">
+                </div>
+            </div>
+            <div class="gallery-video">
+                <div class="gallery-video-inner">
+                    <img src="assets/videos/video_gallery/bridge_video_pred_0.gif" alt="Video Prediction">
+                </div>
+            </div>
+        </div>
+        <div class="gallery-navigation">
+            <button class="button gallery-button" id="video-prev">◀ Previous</button>
+            <button class="button gallery-button" id="video-next">Next ▶</button>
+        </div>
+        <div class="debug-info" id="video-debug"></div>
+    </div>
+    </div> <!-- End Results Section -->
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Target only videos in the rollout gallery
+        document.querySelectorAll('#rollout-gallery video').forEach(video => {
+        video.playbackRate = 4.0;
+        // Ensure speed is maintained after loading
+        video.addEventListener('loadeddata', () => video.playbackRate = 4.0);
+        });
+    });
+    </script>
+</body>
+</html>
